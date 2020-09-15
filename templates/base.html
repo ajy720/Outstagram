@@ -1,0 +1,20 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Outstagram</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="{% static "bootstrap.css" %}">
+    <source src="{% static 'bootstrap.js' %}">
+</head>
+<body>
+{% include 'navbar.html' %}
+<div class="container pt">
+    {% block content %}
+
+    {% endblock %}
+</div>
+</body>
+</html>
