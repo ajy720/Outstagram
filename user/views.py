@@ -1,8 +1,12 @@
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from user.forms import UserForm
 
 # Create your views here.
+from user.models import User
+
+
 def signup(request):
     if request.method == "POST":
         form = UserForm(request.POST)
@@ -21,3 +25,23 @@ def signup(request):
         form = UserForm()
 
     return render(request, 'user/signup.html', {'form':form})
+
+
+@login_required(login_url="user:login")
+def profile(request, id=None):
+    if id:
+        #해당 ID를 가진 프로필
+        profile = User.objects.get(username=id)
+        pass
+    else:
+        #본인 프로필
+        profile = User.objects.get(id=request.user.id)
+
+
+    context = {
+        'profile' : profile,
+
+    }
+
+    return render(request, 'user/profile.html', context)
+

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container my-lg-5">
+        <div class="infoContainer d-flex px-5 py-4 justify-content-around">
+            <div class="left rounded-circle overflow-hidden">
+                <img src="{{ profile.image.url }}" alt="프로필 사진" width="150">
+            </div>
+            <div class="right flex-grow-1 py-3 ml-lg-5 d-flex flex-column justify-content-around">
+                <h3>{{ profile.username }}</h3>
+                <h5>게시글 {{ profile.post_set.count }}
+                    팔로워 {{ profile.followers.count }}
+                    팔로잉 {{ profile.following.count }}</h5>
+
+                <button class="btn w-25
+                {% if user in profile.followers.all %}
+                    btn-secondary"> 팔로잉
+                {% else %}
+                    btn-primary"> 팔로우
+                {% endif %}
+
+                </button>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="postContainer d-flex px-5 py-4 justify-content-around">
+            {% for post in profile.post_set.all %}
+                <img src="{{ post.image.url }}" alt="as" width="300">
+
+
+            {% endfor %}
+
+        </div>
+    </div>
+
+{% endblock %}

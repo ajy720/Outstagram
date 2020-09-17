@@ -6,7 +6,7 @@
         </form>
         <div style="display:flex; " class="justify-content-end ml-3">
             <a href="{% url 'user:logout' %}">로그아웃</a>
-            <div class="bg-light ml-2">{{ user.username }}</div>
+            <a class="bg-light ml-2" href="{% url 'user:profile' %}">{{ user.username }}</a>
         </div>
     {% endif %}
 </nav>
