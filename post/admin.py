@@ -1,12 +1,8 @@
 from django.contrib import admin
-from .models import Post, PostLike
+from .models import Post
 
 # Register your models here.
 
 @admin.register(Post)
-class QuestionAdmin(admin.ModelAdmin):
-    list_display = ("id", "content", "author", "like_count", "comment_count")
-
-@admin.register(PostLike)
-class AnswerAdmin(admin.ModelAdmin):
-    list_display = ("post_id", "author")
+class PostAdmin(admin.ModelAdmin):
+    list_display = ("id", "content", "author", "create_at")
