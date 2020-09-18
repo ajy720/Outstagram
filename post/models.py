@@ -10,6 +10,9 @@ def post_image_path(instance, filename):
 
 # Create your models here.
 class Post(models.Model):
+    class Meta:
+        ordering = ['-create_at',]
+
     content = models.TextField(verbose_name="내용", blank=True, null=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     create_at = models.DateTimeField(auto_created=True, auto_now_add=True)

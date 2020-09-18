@@ -19,7 +19,6 @@ def create_form(request):
         form = PostForm(request.POST, request.FILES)
         # 미디어파일이 함께 있으면 같이 인자로 넣어줘야 함.
 
-        pdb.set_trace()
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
