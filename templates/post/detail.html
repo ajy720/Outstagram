@@ -50,7 +50,9 @@
                                 {{ comment.create_at }} |
                                 </span>
                                 <span>
-                               좋아요 {{ comment.like.count }}개
+                                좋아요
+                                    <span id="comment{{ comment.id }}LikeCount">{{ comment.like.count }}</span>
+                                개
                                 </span>
                             </div>
                         </div>
@@ -65,9 +67,23 @@
                                         alt="heart" width="100%">
                             <script>
                                 $("#comment{{ comment.id }}").click(function () {
-                                    console.log("asdasdds")
                                     $.ajax({
-                                        url: "{% url 'comment:like_comment' comment.id %}"
+                                        url: "{% url 'comment:like_comment' comment.id %}",
+                                        success: ({flag, count}) => {
+                                            console.log(flag, count)
+                                            $("#comment{{ comment.id }}LikeCount").text(count)
+                                            if (flag) {
+                                                $(this).find("img").attr(
+                                                    "src",
+                                                    "{% static 'fill_heart.png' %}"
+                                                )
+                                            } else {
+                                                $(this).find("img").attr(
+                                                    "src",
+                                                    "{% static 'empty_heart.png' %}"
+                                                )
+                                            }
+                                        }
                                     })
 
                                 })
