@@ -8,7 +8,7 @@
         <div class="imgContainer" style="flex: 5">
             <img src="{{ post.image.url }}" alt="{{ post.id }}" width="100%">
         </div>
-        <div class="rightContainer bg-white" style="flex: 3">
+        <div class="rightContainer bg-white d-flex flex-column" style="flex: 3">
             <div class="postSection border-bottom p-3">
                 <div class="head d-flex align-items-center">
                     <div class="imgContainer" style="width: 50px">
@@ -30,7 +30,7 @@
                 {% endif %}
 
             </div>
-            <div class="commentSection">
+            <div class="commentSection flex-grow-1">
                 {% for comment in comments %}
                     <div class="head d-flex align-items-center p-3">
                         <div class="imgContainer" style="width: 50px">
@@ -51,8 +51,7 @@
                                 </span>
                                 <span>
                                 좋아요
-                                    <span id="comment{{ comment.id }}LikeCount">{{ comment.like.count }}</span>
-                                개
+                                    <span id="comment{{ comment.id }}LikeCount">{{ comment.like.count }}</span>개
                                 </span>
                             </div>
                         </div>
@@ -94,6 +93,53 @@
                 {% endfor %}
 
 
+            </div>
+            <div class="postInfoSection d-flex p-3 ">
+                <div id="postLike"
+                     class="likeContainer mr-3" style="width: 20px;">
+                    <img
+                            {% if user in post.like.all %}
+                                src="{% static 'fill_heart.png' %}"
+                            {% else %}
+                                src="{% static 'empty_heart.png' %}"
+                            {% endif %}
+                                alt="heart" width="100%">
+                    <script>
+                        $("#postLike").click(function () {
+                            $.ajax({
+                                url: "{% url 'post:like_post' post.id %}",
+                                success: ({flag, count}) => {
+                                    console.log(flag, count)
+                                    $("#postLikeCount").text(count)
+                                    if (flag) {
+                                        $(this).find("img").attr(
+                                            "src",
+                                            "{% static 'fill_heart.png' %}"
+                                        )
+                                    } else {
+                                        $(this).find("img").attr(
+                                            "src",
+                                            "{% static 'empty_heart.png' %}"
+                                        )
+                                    }
+                                }
+                            })
+
+                        })
+                    </script>
+                </div>
+                <div class="text-dark font-weight-bolder mr-3">
+                    <span>
+                    좋아요
+                        <span id="postLikeCount">{{ post.like.count }}</span>개
+                    </span>
+                </div>
+                <div class="text-dark font-weight-bolder mr-3">
+                    <span>
+                    댓글
+                        <span id="postLikeCount">{{ post.comment_set.count }}</span>개
+                    </span>
+                </div>
             </div>
         </div>
     </div>
