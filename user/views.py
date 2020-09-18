@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from user.forms import UserForm
 
 # Create your views here.
@@ -31,7 +31,7 @@ def signup(request):
 def profile(request, id=None):
     if id:
         #해당 ID를 가진 프로필
-        profile = User.objects.get(username=id)
+        profile = get_object_or_404(User, username=id)
         pass
     else:
         #본인 프로필

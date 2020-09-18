@@ -1,4 +1,5 @@
-<nav class="navbar navbar-light bg-light" style="display:flex;">
+<nav class="navbar navbar-light bg-white border-bottom text mb-4" style="display:flex;">
+    <div class="container">
     <a class="navbar-brand" href="{% url 'post:main' %}">Outstagram</a>
     {% if user.is_authenticated %}
         <form class="form-inline w-50 justify-content-around">
@@ -9,4 +10,6 @@
             <a class="bg-light ml-2" href="{% url 'user:profile' %}">{{ user.username }}</a>
         </div>
     {% endif %}
+    </div>
+
 </nav>

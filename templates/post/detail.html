@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% load static %}
+
+{% block content %}
+
+    <div class="container d-flex border px-0">
+        <div class="imgContainer" style="flex: 5">
+            <img src="{{ post.image.url }}" alt="{{ post.id }}" width="100%">
+        </div>
+        <div class="rightContainer bg-white" style="flex: 3">
+            <div class="postSection border-bottom p-3">
+                <div class="head d-flex align-items-center">
+                    <div class="imgContainer" style="width: 50px">
+                        <img src="{{ post.author.image.url }}" alt="프로필 사진" width="100%" class="rounded-circle">
+                    </div>
+                    <div class="right ml-3">
+                        <a href="{% url 'user:profile' post.author.username %}" class="font-weight-bold text-dark">
+                            {{ post.author.username }}
+                        </a>
+                        <div class="text-black-50 small">
+                            {{ post.create_at }}
+                        </div>
+                    </div>
+                </div>
+                {% if post.content %}
+                    <div class="body">
+                        {{ post.content }}
+                    </div>
+                {% endif %}
+
+            </div>
+            <div class="commentSection">
+                {% for comment in comments %}
+                    <div class="head d-flex align-items-center p-3">
+                        <div class="imgContainer" style="width: 50px">
+                            <img src="{{ comment.author.image.url }}" alt="프로필 사진" width="100%" class="rounded-circle">
+                        </div>
+                        <div class="contentContainer ml-3">
+                            <div class="text-break">
+                                <a href="{% url 'user:profile' post.author.username %}"
+                                   class="font-weight-bold text-dark d-inline">
+                                    {{ comment.author.username }}
+                                </a>
+                                {{ comment.content }}
+
+                            </div>
+                            <div class="text-black-50 small">
+                                <span>
+                                {{ comment.create_at }} |
+                                </span>
+                                <span>
+                               좋아요 {{ comment.like.count }}개
+                                </span>
+                            </div>
+                        </div>
+                        <div id="comment{{ comment.id }}"
+                             class="likeContainer" style="width: 20px;">
+                            <img
+                                    {% if user in comment.like.all %}
+                                        src="{% static 'fill_heart.png' %}"
+                                    {% else %}
+                                        src="{% static 'empty_heart.png' %}"
+                                    {% endif %}
+                                        alt="heart" width="100%">
+                            <script>
+                                $("#comment{{ comment.id }}").click(function () {
+                                    console.log("asdasdds")
+                                    $.ajax({
+                                        url: "{% url 'comment:like_comment' comment.id %}"
+                                    })
+
+                                })
+                            </script>
+                        </div>
+                    </div>
+
+                {% endfor %}
+
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

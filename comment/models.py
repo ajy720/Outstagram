@@ -3,6 +3,7 @@ from django.conf import settings
 from user.models import User
 from post.models import Post
 
+
 # Create your models here.
 class Comment(models.Model):
     post_id = models.ForeignKey(Post, on_delete=models.CASCADE)

@@ -2,57 +2,54 @@
 {% load static %}
 
 {% block content %}
-    <div class="container my-lg-5">
-        <div class="infoContainer d-flex py-4 justify-content-around w-75 m-auto justify-content-around">
-            <div class="left w-25 d-flex align-items-center">
-                <img src="{{ profile.image.url }}" class="rounded-circle overflow-hidden" alt="프로필 사진" width="100%">
-            </div>
-            <div class="right flex-grow-1 pl-lg-5 py-3 d-flex flex-column justify-content-around">
-                <h3>{{ profile.username }}</h3>
-                <h5 class="d-flex justify-content-start flex-wrap flex-">
-                    <span class="mr-3">게시글 {{ profile.post_set.count }}</span>
-                    <span class="mr-3">팔로워 {{ profile.followers.count }}</span>
-                    <span class="mr-3">팔로잉 {{ profile.following.count }}</span></h5>
+    <div class="infoContainer d-flex py-4 justify-content-around w-75 m-auto justify-content-around">
+        <div class="left w-25 d-flex align-items-center">
+            <img src="{{ profile.image.url }}" class="rounded-circle overflow-hidden" alt="프로필 사진" width="100%">
+        </div>
+        <div class="right flex-grow-1 pl-lg-5 py-3 d-flex flex-column justify-content-around">
+            <h3>{{ profile.username }}</h3>
+            <h5 class="d-flex justify-content-start flex-wrap flex-">
+                <span class="mr-3">게시글 {{ profile.post_set.count }}</span>
+                <span class="mr-3">팔로워 {{ profile.followers.count }}</span>
+                <span class="mr-3">팔로잉 {{ profile.following.count }}</span></h5>
 
-                <div class="d-flex justify-content-start flex-wrap">
-                    {% if user != profile %}
-                        <button class="btn w-25
+            <div class="d-flex justify-content-start flex-wrap">
+                {% if user != profile %}
+                    <button class="btn w-25
                         {% if user in profile.followers.all %}
                         btn-secondary"> 팔로잉
-                        {% else %}
-                            btn-primary"> 팔로우
-                        {% endif %}
-                        </button>
                     {% else %}
-                        <a class="mr-3 d-block btn btn-outline-dark" href="#">
-                        프로필 수정
-                        </a>
-                        <a class="d-block btn btn-outline-info" href="{% url 'post:create' %}">
-                        게시글 작성
-                        </a>
+                        btn-primary"> 팔로우
                     {% endif %}
+                    </button>
+                {% else %}
+                    <a class="mr-3 d-block btn btn-outline-dark" href="#">
+                        프로필 수정
+                    </a>
+                    <a class="d-block btn btn-outline-info" href="{% url 'post:create' %}">
+                        게시글 작성
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <hr>
+
+    <div class="postContainer d-flex py-4 justify-content-around">
+
+        <div class="row row-cols-lg-3 w-100">
+            {% for post in profile.post_set.all %}
+                <div class="col min-">
+                    <a href="{% url 'post:detail' post.id %}">
+                        <img src="{{ post.image.url }}" alt="{{ forloop.counter }}" width="100%">
+                    </a>
                 </div>
-            </div>
-        </div>
-        <hr>
-
-        <div class="postContainer d-flex p-4 justify-content-around">
-
-            <div class="row row-cols-lg-3 w-100">
-                {% for post in profile.post_set.all %}
-                    <div class="col min-">
-                        {#                    게시글 상세 페이지로 링크#}
-                        <a href="#">
-                            <img src="{{ post.image.url }}" alt="as" width="100%">
-                        </a>
-                    </div>
 
 
-                {% endfor %}
-
-            </div>
+            {% endfor %}
 
         </div>
+
     </div>
 
 {% endblock %}

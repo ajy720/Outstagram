@@ -25,5 +25,6 @@ urlpatterns = [
     path('user/', include('user.urls')),
     # path('', include('post.urls')),
     path('post/', include('post.urls')),
+    path('comment/', include('comment.urls')),
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT})
 ]
