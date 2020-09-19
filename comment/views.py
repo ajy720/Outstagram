@@ -1,4 +1,10 @@
+import pdb
+
 from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, redirect
+
+from post.models import Post
+from .forms import CommentForm
 from .models import Comment
 
 
@@ -22,3 +28,18 @@ def like_comment(request, comment_id):
     }
 
     return JsonResponse(context)
+
+
+def add(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+
+    form = CommentForm(request.POST)
+
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.post_id = post
+        comment.author = request.user
+
+        comment.save()
+
+    return redirect('post:detail', post_id)
