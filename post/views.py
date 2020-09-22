@@ -34,7 +34,7 @@ def create_form(request):
 
     return render(request, "post/postForm.html", context);
 
-
+@login_required(login_url="user:login")
 def detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     comment = post.comment_set.all()

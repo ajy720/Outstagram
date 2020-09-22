@@ -43,3 +43,13 @@ def add(request, post_id):
         comment.save()
 
     return redirect('post:detail', post_id)
+
+
+def delete(request, comment_id):
+
+    comment = get_object_or_404(Comment, id=comment_id);
+
+    if request.user == comment.author:
+        comment.delete();
+
+    return redirect("post:detail", post_id=comment.post_id.id)
