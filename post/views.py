@@ -9,10 +9,6 @@ from .forms import PostForm
 from .models import Post
 
 
-@login_required(login_url="user:login")
-def main(request):
-    return render(request, "base.html");
-
 
 @login_required(login_url="user:login")
 def create_form(request):

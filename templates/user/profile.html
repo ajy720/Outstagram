@@ -10,18 +10,38 @@
             <h3>{{ profile.username }}</h3>
             <h5 class="d-flex justify-content-start flex-wrap flex-">
                 <span class="mr-3">게시글 {{ profile.post_set.count }}</span>
-                <span class="mr-3">팔로워 {{ profile.followers.count }}</span>
-                <span class="mr-3">팔로잉 {{ profile.following.count }}</span></h5>
+                <span class="mr-3" id="followers">팔로워 {{ profile.followers.count }}</span>
+                <span class="mr-3" id="following">팔로잉 {{ profile.following.count }}</span></h5>
 
             <div class="d-flex justify-content-start flex-wrap">
                 {% if user != profile %}
-                    <button class="btn w-25
-                        {% if user in profile.followers.all %}
-                        btn-secondary"> 팔로잉
+                    {% if user in profile.followers.all %}
+                        <div id="follow" class="btn w-25 btn-secondary"> 팔로잉</div>
                     {% else %}
-                        btn-primary"> 팔로우
+                        <div id="follow" class="btn w-25 btn-primary"> 팔로우</div>
                     {% endif %}
-                    </button>
+
+                    <script>
+                        $("#follow").click(function () {
+
+                            $.ajax({
+                                url: "{% url 'user:follow' profile.id %}",
+                                success: ({flag, count}) => {
+                                    if (flag) {
+                                        $("#follow").text("팔로잉")
+                                        $("#follow").removeClass("btn-primary")
+                                        $("#follow").addClass("btn-secondary")
+                                    } else {
+                                        $("#follow").text("팔로우")
+                                        $("#follow").removeClass("btn-secondary")
+                                        $("#follow").addClass("btn-primary")
+                                    }
+                                    $("#followers").text("팔로워 " + count)
+                                },
+                            })
+                        })
+                    </script>
+
                 {% else %}
                     <a class="mr-3 d-block btn btn-outline-dark" href="#">
                         프로필 수정

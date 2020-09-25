@@ -1,5 +1,8 @@
+import pdb
+
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from user.forms import UserForm
 
@@ -24,24 +27,46 @@ def signup(request):
     else:
         form = UserForm()
 
-    return render(request, 'user/signup.html', {'form':form})
+    return render(request, 'user/signup.html', {'form': form})
 
 
 @login_required(login_url="user:login")
 def profile(request, id=None):
     if id:
-        #해당 ID를 가진 프로필
+        # 해당 ID를 가진 프로필
         profile = get_object_or_404(User, username=id)
         pass
     else:
-        #본인 프로필
+        # 본인 프로필
         profile = User.objects.get(id=request.user.id)
 
-
     context = {
-        'profile' : profile,
+        'profile': profile,
 
     }
 
     return render(request, 'user/profile.html', context)
 
+
+def follow(request, user_id):
+    user_from = get_object_or_404(User, id=request.user.id)
+    user_to = get_object_or_404(User, id=user_id)
+
+    if user_from in user_to.followers.all():
+        user_from.following.remove(user_to)
+        user_to.followers.remove(user_from)
+        flag = False
+    else:
+        user_from.following.add(user_to)
+        user_to.followers.add(user_from)
+        flag = True
+
+    user_from.save()
+    user_to.save()
+
+    data = {
+        "flag": flag,
+        "count": user_to.followers.count(),
+    }
+
+    return JsonResponse(data)
