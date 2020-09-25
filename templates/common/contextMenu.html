@@ -24,7 +24,7 @@
 
     .contextMenu {
         position: absolute;
-        width: 20rem;
+        width: 15rem;
         height: auto;
         left: 50%;
         top: 30%;
@@ -35,13 +35,21 @@
         z-index: 999;
     }
 
-    .contextMenu > * {
-        color: black;
+    .contextMenu > .head{
     }
 
-    .contextMenu > *:hover {
-        color: white;
-        background-color: #4e555b;
+    .contextMenu > * {
+        padding: 3px 0 ;
+        color: black;
+        background-color: #fff;
+    }
+
+    .contextMenu > a{
+        display: block;
+    }
+
+    .contextMenu > a:hover {
+        background-color: whitesmoke;
     }
 </style>
 
@@ -49,11 +57,13 @@
      style="max-width: 17px; opacity: 0.5;">
 <div class="context">
     <div class="context_bg"></div>
-    <div class="contextMenu border text-center bg-light">
+    <div class="contextMenu text-center">
+        <div class="font-weight-bold py-2 head">Menu</div>
         {% if flag == "comment" %}
-            <a class="d-block" href="{% url 'comment:delete' item.id %}">삭제</a>
-        {% else %}
-            <a class="d-block" href="{% url 'post:delete' item.id %}">삭제</a>
+            <a href="{% url 'comment:delete' item.id %}">삭제</a>
+        {% elif flag == "post" %}
+            <a href="{% url 'post:delete' item.id %}">삭제</a>
+            <a href="{% url 'post:modify' item.id %}">수정</a>
         {% endif %}
     </div>
     <script>

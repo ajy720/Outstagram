@@ -47,6 +47,34 @@ def delete(request, post_id):
 
 
 @login_required(login_url="user:login")
+def modify(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+
+    if request.user != post.author:
+        return redirect('post:detail', post_id=post.id)
+
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES, instance=post)
+        # 미디어파일이 함께 있으면 같이 인자로 넣어줘야 함.
+
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+
+            return redirect('post:detail', post.id)
+
+    else:
+        form = PostForm(instance=post)
+
+    context = {
+        'form': form
+    }
+
+    return render(request, "post/postForm.html", context);
+
+
+@login_required(login_url="user:login")
 def detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     comment = post.comment_set.all()
