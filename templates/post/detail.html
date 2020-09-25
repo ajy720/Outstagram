@@ -24,31 +24,6 @@
             align-items: center;
         }
 
-        .context {
-            position: relative;
-        }
-
-        .contextMenu {
-            position: absolute;
-            width: 75px;
-            left: -65px;
-            top: 15px;
-            border-radius: 0.5rem;
-            overflow: hidden;
-            user-select: none;
-            display: none;
-            z-index: 999;
-        }
-
-        .contextMenu > *{
-            color: black;
-        }
-
-        .contextMenu > *:hover {
-            color: white;
-            background-color: #4e555b;
-        }
-
     </style>
 
     <div class="d-flex flex-wrap border" style="height: 700px">
@@ -62,7 +37,7 @@
                     <div class="imgContainer" style="width: 50px">
                         <img src="{{ post.author.image.url }}" alt="프로필 사진" width="100%" class="rounded-circle">
                     </div>
-                    <div class="right ml-3">
+                    <div class="right ml-3 flex-fill">
                         <a href="{% url 'user:profile' post.author.username %}" class="font-weight-bold text-dark">
                             {{ post.author.username }}
                         </a>
@@ -70,6 +45,10 @@
                             {{ post.create_at }}
                         </div>
                     </div>
+
+                    {% if post.author == user %}
+                        {% include "common/contextMenu.html" with flag="post" item=post %}
+                    {% endif %}
                 </div>
                 {% if post.content %}
                     <div class="body">
@@ -79,95 +58,7 @@
 
             </div>
             <div class="commentSection flex-grow-1 border-bottom" style="overflow-y: scroll">
-                {% for comment in comments %}
-                    <div id="comment{{ comment.id }}"
-                         class="comment head p-3">
-                        <a class="imgContainer" style="display: block; max-width: 50px"
-                           href="{% url 'user:profile' comment.author.username %}">
-                            <img src="{{ comment.author.image.url }}" alt="프로필 사진" width="100%"
-                                 class="rounded-circle">
-                        </a>
-                        <div class="contentContainer ml-3 flex-fill">
-                            <div class="text-break text-wrap">
-                                <a href="{% url 'user:profile' comment.author.username %}"
-                                   class="font-weight-bold text-dark d-inline">
-                                    {{ comment.author.username }}</a>
-                                {{ comment.content }}
-
-                            </div>
-                            <div class="text-black-50 small">
-                                <span>
-                                {{ comment.create_at }} |
-                                </span>
-                                <span>
-                                좋아요
-                                    <span id="comment{{ comment.id }}LikeCount">{{ comment.like.count }}</span>개
-                                </span>
-                            </div>
-                        </div>
-                        <div class="context mr-1" style="max-width: 17px">
-                            {% if comment.author == user %}
-                                <img src="{% static "context_menu.png" %}" alt="메뉴" width="100%" style="opacity: 0.5;">
-                                <div class="contextMenu border text-center bg-light">
-                                    <a class="d-block" href="{% url 'comment:delete' comment.id %}">삭제</a>
-                                    <div class="closeContext text-center">X</div>
-                                </div>
-                                <script>
-                                    $(".context > img").click(function () {
-                                        console.log($(this).next(".contextMenu").find(".delete").attr("data"))
-                                        $(this).next(".contextMenu").show();
-                                    })
-
-                                    $(".closeContext").click(function () {
-                                        $(this).parent().hide();
-                                    })
-
-
-                                </script>
-                            {% endif %}
-                        </div>
-                        <div id="comment{{ comment.id }}heart"
-                             class="likeContainer" style="max-width: 20px">
-                            <img class="heart"
-                                    {% if user in comment.like.all %}
-                                 src="{% static 'fill_heart.png' %}"
-                                    {% else %}
-                                 src="{% static 'empty_heart.png' %}"
-                                    {% endif %}
-                                 alt="heart" width="100%">
-                            <script>
-                                $("#comment{{ comment.id }}heart").click(like);
-                                $("#comment{{ comment.id }}").dblclick(like);
-
-                                function like() {
-                                    $.ajax({
-                                        url: "{% url 'comment:like_comment' comment.id %}",
-                                        success: ({flag, count}) => {
-                                            console.log(flag, count)
-                                            $("#comment{{ comment.id }}LikeCount").text(count)
-
-                                            if (flag) {
-                                                $(this).find("img.heart").attr(
-                                                    "src",
-                                                    "{% static 'fill_heart.png' %}"
-                                                )
-                                            } else {
-                                                $(this).find("img.heart").attr(
-                                                    "src",
-                                                    "{% static 'empty_heart.png' %}"
-                                                )
-                                            }
-                                        }
-                                    })
-
-                                }
-                            </script>
-                        </div>
-                    </div>
-
-                {% endfor %}
-
-
+                {% include 'comment/comments.html' with comments=comments %}
             </div>
             <div class="postInfoSection d-flex px-3 pt-3 pb-2 mt-sm-1">
                 <div id="postLike"

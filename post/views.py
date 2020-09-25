@@ -1,3 +1,5 @@
+import pdb
+
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -23,7 +25,7 @@ def create_form(request):
             post.author = request.user
             post.save()
 
-            return redirect('post:main')
+            return redirect('post:detail', post.id)
 
     else:
         form = PostForm()
@@ -33,6 +35,16 @@ def create_form(request):
     }
 
     return render(request, "post/postForm.html", context);
+
+
+def delete(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+
+    if post.author == request.user:
+        post.delete()
+
+    return redirect("post:main");
+
 
 @login_required(login_url="user:login")
 def detail(request, post_id):

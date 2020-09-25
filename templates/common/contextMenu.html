@@ -1,0 +1,70 @@
+{% load static %}
+
+<style>
+    .context {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        display: none;
+        z-index: 999;
+        font-size: 1.3rem;
+    }
+
+    .context_bg {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        background-color: #000;
+        opacity: 0.5;
+    }
+
+    .contextMenu {
+        position: absolute;
+        width: 20rem;
+        height: auto;
+        left: 50%;
+        top: 30%;
+        transform: translate(-50%, -50%);
+        border-radius: 0.5rem;
+        overflow: hidden;
+        user-select: none;
+        z-index: 999;
+    }
+
+    .contextMenu > * {
+        color: black;
+    }
+
+    .contextMenu > *:hover {
+        color: white;
+        background-color: #4e555b;
+    }
+</style>
+
+<img class="contextBtn mr-1" src="{% static "context_menu.png" %}" alt="메뉴"
+     style="max-width: 17px; opacity: 0.5;">
+<div class="context">
+    <div class="context_bg"></div>
+    <div class="contextMenu border text-center bg-light">
+        {% if flag == "comment" %}
+            <a class="d-block" href="{% url 'comment:delete' item.id %}">삭제</a>
+        {% else %}
+            <a class="d-block" href="{% url 'post:delete' item.id %}">삭제</a>
+        {% endif %}
+    </div>
+    <script>
+        $(".contextBtn").click(function () {
+            $(this).next(".context").show();
+        })
+
+        $(".context_bg").click(function () {
+            $(this).parent().hide();
+        })
+
+
+    </script>
+</div>
