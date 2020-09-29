@@ -34,10 +34,36 @@
             width: 100%;
         }
 
-        .infoContainer > .head > img {
-            max-width: 30px;
-
+        .infoContainer hr {
+            margin: 0;
         }
+
+        .infoContainer > .head {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 0.3rem 0.5rem;
+        }
+
+        .infoContainer > .head > * {
+            margin-right: 0.5rem;
+        }
+
+        .infoContainer > .head img {
+            max-width: 30px;
+        }
+
+        .infoContainer > .body > a {
+            color: black;
+            font-weight: bolder;
+            font-size: 1.2rem;
+        }
+
+        .infoContainer > .body {
+            padding: 0.3rem 0.5rem;
+        }
+
+
     </style>
     <div class="postsContainer">
         {% for post in posts %}
@@ -52,13 +78,64 @@
                     <img src="{{ post.image.url }}" alt="게시글 이미지">
                 </div>
                 <div class="infoContainer">
-                    <div class="head d-flex">
-                        {% if user in post.like.all %}
-                            <img src="{% static 'fill_heart.png' %}" alt="좋아요 버튼">
-                        {% else %}
-                            <img src="{% static 'empty_heart.png' %}" alt="좋아요 버튼">
-                        {% endif %}
-                        <img src="{% static 'comment.png' %}" alt="좋아요 버튼">
+                    <div class="head">
+                        <img id="like{{ post.id }}"
+                                {% if user in post.like.all %}
+                             src="{% static 'fill_heart.png' %}"
+                                {% else %}
+                             src="{% static 'empty_heart.png' %}"
+                                {% endif %}
+                             alt="heart" width="100%">
+                        <a href="{% url 'post:detail' post.id %}">
+                            <img src="{% static 'comment.png' %}" alt="댓글 버튼">
+                        </a>
+                        <div class="text-dark font-weight-bolder">
+                            <span>
+                            좋아요
+                                <span id="postLikeCount{{ post.id }}">{{ post.like.count }}</span>개
+                            </span>
+                        </div>
+                        <div class="text-dark font-weight-bolder">
+                            <span>
+                            댓글
+                                <span id="postLikeCount">{{ post.comment_set.count }}</span>개
+                            </span>
+                        </div>
+
+                        <script>
+                            $("#like{{ post.id }}").click(function () {
+                                $.ajax({
+                                    url: "{% url 'post:like_post' post.id %}",
+                                    success: ({flag, count}) => {
+                                        console.log(flag, count)
+                                        $("#postLikeCount{{ post.id }}").text(count)
+                                        if (flag) {
+                                            $(this).attr(
+                                                "src",
+                                                "{% static 'fill_heart.png' %}"
+                                            )
+                                        } else {
+                                            $(this).attr(
+                                                "src",
+                                                "{% static 'empty_heart.png' %}"
+                                            )
+                                        }
+                                    }
+                                })
+                            })
+
+
+                        </script>
+                    </div>
+                    <hr>
+                    <div class="body">
+                        <a href="{% url 'user:profile' post.author %}">{{ post.author }}</a>
+                        {{ post.content }}
+                        <br>
+
+                        <div class="text-black-50 small">
+                            {{ post.create_at }}
+                        </div>
                     </div>
                 </div>
             </div>
