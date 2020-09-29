@@ -39,7 +39,7 @@ def delete(request, post_id):
     if post.author == request.user:
         post.delete()
 
-    return redirect("post:main");
+    return redirect("feed:main");
 
 
 @login_required(login_url="user:login")
