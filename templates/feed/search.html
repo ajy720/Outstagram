@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <style>
+        section {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        section > h4 {
+            border-bottom: 1px solid black;
+            width: fit-content;
+            padding: 0.3rem;
+        }
+
+        .profileImg {
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .userContainer {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .userContainer:last-child {
+            border-bottom: 0;
+        }
+
+        .userContainer .name a {
+            color: black;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .userContainer > * {
+            margin: 0 0.5rem;
+        }
+
+        .userContainer > .name {
+            flex-grow: 1;
+        }
+
+        .userContainer img {
+            max-width: 50px;
+        }
+
+    </style>
+
+    <link rel="stylesheet" href="{% static 'timeline.css' %}">
+    <div class="container">
+
+        <section class="usersContainer">
+            <h4>사용자</h4>
+            {% for res_user in users %}
+                {% if user != res_user %}
+                    <div class="userContainer">
+                        <a class="profileImg" href="{% url 'user:profile' res_user.username %}">
+                            <img src="{{ res_user.image.url }}">
+                        </a>
+                        <div class="name">
+                            <a href="{% url 'user:profile' res_user.username %}" class="profile">
+                                {{ res_user.username }}
+                            </a>
+                        </div>
+                        {% if user in res_user.followers.all %}
+                            <div id="follow{{ res_user.id }}" class="btn btn-secondary"> 팔로잉</div>
+                        {% else %}
+                            <div id="follow{{ res_user.id }}" class="btn btn-primary"> 팔로우</div>
+                        {% endif %}
+
+                        <script>
+                            $("#follow{{ res_user.id }}").click(function () {
+
+                                $.ajax({
+                                    url: "{% url 'user:follow' res_user.id %}",
+                                    success: ({flag, count}) => {
+                                        if (flag) {
+                                            $("#follow{{ res_user.id }}").text("팔로잉")
+                                            $("#follow{{ res_user.id }}").removeClass("btn-primary")
+                                            $("#follow{{ res_user.id }}").addClass("btn-secondary")
+                                        } else {
+                                            $("#follow{{ res_user.id }}").text("팔로우")
+                                            $("#follow{{ res_user.id }}").removeClass("btn-secondary")
+                                            $("#follow{{ res_user.id }}").addClass("btn-primary")
+                                        }
+                                    },
+                                })
+                            })
+                        </script>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </section>
+
+        <section class="postsContainer">
+            <h4>게시글</h4>
+            {% include 'feed/feed.html' with posts=posts %}
+        </section>
+
+    </div>
+{% endblock %}

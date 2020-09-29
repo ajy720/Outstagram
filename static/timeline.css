@@ -1,0 +1,65 @@
+
+.postsContainer {
+    margin: 0 auto;
+    width: 70%;
+}
+
+.postContainer {
+    border: 1px solid lightgray;
+    background-color: #fff;
+    margin-bottom: 2rem;
+    width: 100%;
+}
+
+.postContainer a {
+
+}
+
+.authorContainer {
+    padding: 0.6rem;
+}
+
+.author-profile-image {
+    max-width: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 1rem;
+    font-size: 1.3rem;
+}
+
+.author-profile-image img {
+    width: 100%;
+}
+
+.imgContainer > img {
+    width: 100%;
+}
+
+.infoContainer hr {
+    margin: 0;
+}
+
+.infoContainer > .head {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0.3rem 0.5rem;
+}
+
+.infoContainer > .head > * {
+    margin-right: 0.5rem;
+}
+
+.infoContainer > .head img {
+    max-width: 30px;
+}
+
+.profile {
+    color: black;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.infoContainer > .body {
+    padding: 0.3rem 0.5rem;
+}
