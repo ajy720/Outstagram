@@ -8,4 +8,4 @@ User = get_user_model()
 class UserForm(UserCreationForm):
     class Meta:
         model = User
-        fields = UserCreationForm.Meta.fields + ('followers', 'following')
+        fields = UserCreationForm.Meta.fields

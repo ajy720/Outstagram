@@ -67,7 +67,7 @@
                                 {{ res_user.username }}
                             </a>
                         </div>
-                        {% if user in res_user.followers.all %}
+                        {% if user in res_user.get_followers %}
                             <div id="follow{{ res_user.id }}" class="btn btn-secondary"> 팔로잉</div>
                         {% else %}
                             <div id="follow{{ res_user.id }}" class="btn btn-primary"> 팔로우</div>
@@ -75,7 +75,6 @@
 
                         <script>
                             $("#follow{{ res_user.id }}").click(function () {
-
                                 $.ajax({
                                     url: "{% url 'user:follow' res_user.id %}",
                                     success: ({flag, count}) => {

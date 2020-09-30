@@ -15,7 +15,7 @@
 
             <div class="d-flex justify-content-start flex-wrap">
                 {% if user != profile %}
-                    {% if user in profile.followers.all %}
+                    {% if user in profile.get_followers %}
                         <div id="follow" class="btn w-25 btn-secondary"> 팔로잉</div>
                     {% else %}
                         <div id="follow" class="btn w-25 btn-primary"> 팔로우</div>

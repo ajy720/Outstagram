@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from user.forms import UserForm
 
 # Create your views here.
-from user.models import User
+from user.models import User, UserFollowing
 
 
 def signup(request):
@@ -52,17 +52,16 @@ def follow(request, user_id):
     user_from = get_object_or_404(User, id=request.user.id)
     user_to = get_object_or_404(User, id=user_id)
 
-    if user_from in user_to.followers.all():
-        user_from.following.remove(user_to)
-        user_to.followers.remove(user_from)
+    followers = [user.user_from for user in user_to.followers.all()]
+
+    # pdb.set_trace()
+
+    if user_from in followers:
+        UserFollowing.objects.get(user_from=user_from, user_to=user_to).delete()
         flag = False
     else:
-        user_from.following.add(user_to)
-        user_to.followers.add(user_from)
+        UserFollowing.objects.create(user_from=user_from, user_to=user_to)
         flag = True
-
-    user_from.save()
-    user_to.save()
 
     data = {
         "flag": flag,
