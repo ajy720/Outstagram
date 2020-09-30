@@ -22,7 +22,7 @@ def signup(request):
             user = authenticate(username=username, password=raw_password)
             # authenticate에는 username과 password만 들어가면 되기 때문에 따로 추출해 전달
             login(request, user)
-            return redirect('post:main')
+            return redirect('user:profile')
             # 회원가입 후 해당 계정으로 로그인 후 메인화면으로 이동
     else:
         form = UserForm()
