@@ -1,0 +1,80 @@
+{% load static %}
+
+<style>
+
+
+    .profileImg {
+        border-radius: 50%;
+        overflow: hidden;
+    }
+
+    .userContainer {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        padding: 0.5rem;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .userContainer:last-child {
+        border-bottom: 0;
+    }
+
+    .userContainer .name a {
+        color: black;
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+
+    .userContainer > .name {
+        margin: 0 1rem;
+    }
+
+    .userContainer > .name {
+        flex-grow: 1;
+    }
+
+    .userContainer img {
+        max-width: 50px;
+    }
+
+</style>
+
+{% for res_user in users %}
+    <div class="userContainer">
+        <a class="profileImg" href="{% url 'user:profile' res_user.username %}">
+            <img src="{{ res_user.image.url }}">
+        </a>
+        <div class="name">
+            <a href="{% url 'user:profile' res_user.username %}" class="profile">
+                {{ res_user.username }}
+            </a>
+        </div>
+        {% if user != res_user %}
+            {% if user in res_user.get_followers %}
+                <div id="follow{{ res_user.id }}" class="btn btn-secondary"> 팔로잉</div>
+            {% else %}
+                <div id="follow{{ res_user.id }}" class="btn btn-primary"> 팔로우</div>
+            {% endif %}
+
+            <script>
+                $("#follow{{ res_user.id }}").click(function () {
+                    $.ajax({
+                        url: "{% url 'user:follow' res_user.id %}",
+                        success: ({flag, count}) => {
+                            if (flag) {
+                                $("#follow{{ res_user.id }}").text("팔로잉")
+                                $("#follow{{ res_user.id }}").removeClass("btn-primary")
+                                $("#follow{{ res_user.id }}").addClass("btn-secondary")
+                            } else {
+                                $("#follow{{ res_user.id }}").text("팔로우")
+                                $("#follow{{ res_user.id }}").removeClass("btn-secondary")
+                                $("#follow{{ res_user.id }}").addClass("btn-primary")
+                            }
+                        },
+                    })
+                })
+            </script>
+        {% endif %}
+    </div>
+{% endfor %}

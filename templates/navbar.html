@@ -8,7 +8,7 @@
         </form>
         <div style="display:flex; " class="justify-content-end ml-3">
             <a href="{% url 'user:logout' %}">로그아웃</a>
-            <a class="bg-light ml-2" href="{% url 'user:profile' %}">{{ user.username }}</a>
+            <a class="ml-2" href="{% url 'user:profile' %}">{{ user.username }}</a>
         </div>
     {% endif %}
     </div>

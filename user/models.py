@@ -33,6 +33,8 @@ class User(AbstractUser):
     def get_followers(self):
         return [user.user_from for user in self.followers.all()]
 
+    def get_following(self):
+        return [user.user_to for user in self.following.all()]
 
 
 class UserFollowing(models.Model):
