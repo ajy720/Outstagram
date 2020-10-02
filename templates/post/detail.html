@@ -3,10 +3,6 @@
 
 {% block content %}
     <style>
-        .commentSection::-webkit-scrollbar {
-            display: none;
-        }
-
         .commentInput {
             border: none;
             border-bottom: 1px solid lightgray;
@@ -19,9 +15,27 @@
             text-align: center;
         }
 
-        .comment {
-            display: flex;
-            align-items: center;
+        .commentSection {
+            flex-grow: 1;
+            overflow-y: scroll;
+        }
+
+        ::-webkit-scrollbar {
+            width: 0.4rem;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: none;
+            overflow: hidden;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #b6b6b6;
+            border-radius: 0.5rem;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9a9a9a;
         }
 
     </style>
@@ -30,7 +44,7 @@
         <div class="imgContainer" style="height: 100%">
             <img src="{{ post.image.url }}" alt="{{ post.id }}" height="100%">
         </div>
-        <div class="rightContainer border-left bg-white d-flex flex-column flex-fill"
+        <div class="rightContainer border-left bg-white flex-fill h-100 d-flex flex-column"
              style="min-width: 200px; max-width: 700px">
             <div class="postSection border-bottom p-3">
                 <div class="head d-flex align-items-center">
@@ -57,7 +71,7 @@
                 {% endif %}
 
             </div>
-            <div class="commentSection flex-grow-1 border-bottom" style="overflow-y: scroll">
+            <div class="commentSection flex-grow-1 border-bottom">
                 {% include 'comment/comments.html' with comments=comments %}
             </div>
             <div class="postInfoSection d-flex px-3 pt-3 pb-2 mt-sm-1">

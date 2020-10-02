@@ -1,5 +1,13 @@
 {% load static %}
 
+<style>
+    .comment {
+        display: flex;
+        align-items: center;
+    }
+
+</style>
+
 {% for comment in comments %}
     <div id="comment{{ comment.id }}"
          class="comment head p-3">
