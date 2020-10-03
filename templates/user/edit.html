@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% load static %}
+
+{% block content %}
+    <form action="{% url 'user:edit' %}" method="post" class="post-form">
+        {% csrf_token %}
+{#        {% bootstrap_form form %}#}
+            {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">저장</button>
+    </form>
+{% endblock %}

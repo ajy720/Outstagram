@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from user.forms import UserForm
+from user.forms import UserForm, UserEditForm
 
 # Create your views here.
 from user.models import User, UserFollowing
@@ -69,3 +69,27 @@ def follow(request, user_id):
     }
 
     return JsonResponse(data)
+
+
+def edit(request):
+    user = get_object_or_404(User, id=request.user.id)
+
+    if request.method == "POST":
+        form = UserEditForm(request.POST, request.FILES, instance=user)
+
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.save()
+
+            # pdb.set_trace()
+
+            return redirect("user:profile")
+
+    else:
+        form = UserEditForm(instance=user)
+
+    context = {
+        "form": form,
+    }
+
+    return render(request, 'user/edit.html', context)
