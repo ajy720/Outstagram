@@ -1,11 +1,9 @@
-import pdb
-
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from user.forms import UserForm, UserEditForm
 
+from user.forms import UserForm, UserEditForm, PasswordEditForm
 # Create your views here.
 from user.models import User, UserFollowing
 
@@ -81,12 +79,34 @@ def edit(request):
             user = form.save(commit=False)
             user.save()
 
-            # pdb.set_trace()
+            update_session_auth_hash(request, user)
 
             return redirect("user:profile")
-
     else:
         form = UserEditForm(instance=user)
+
+    context = {
+        "form": form,
+    }
+
+    return render(request, 'user/edit.html', context)
+
+
+def password(request):
+    user = get_object_or_404(User, id=request.user.id)
+
+    if request.method == "POST":
+        form = PasswordEditForm(request.POST, instance=user)
+
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.save()
+
+            update_session_auth_hash(request, user)
+
+            return redirect("user:profile")
+    else:
+        form = PasswordEditForm(user)
 
     context = {
         "form": form,

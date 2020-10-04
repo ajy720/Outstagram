@@ -1,13 +1,10 @@
-import pdb
-
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import PostForm
 
+from .forms import PostForm
 # Create your views here.
 from .models import Post
-
 
 
 @login_required(login_url="user:login")
