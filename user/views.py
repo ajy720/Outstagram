@@ -96,7 +96,8 @@ def password(request):
     user = get_object_or_404(User, id=request.user.id)
 
     if request.method == "POST":
-        form = PasswordEditForm(request.POST, instance=user)
+        form = PasswordEditForm(user, request.POST)
+        # PasswordChangeForm은 kwargs가 아닌 args로 (user, data) 순으로 받는다
 
         if form.is_valid():
             user = form.save(commit=False)
@@ -112,4 +113,4 @@ def password(request):
         "form": form,
     }
 
-    return render(request, 'user/edit.html', context)
+    return render(request, 'user/password.html', context)
