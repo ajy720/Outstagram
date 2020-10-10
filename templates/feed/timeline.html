@@ -3,8 +3,8 @@
 
 {% block content %}
     <link rel="stylesheet" href="{% static 'timeline.css' %}">
-    <div class="postsContainer">
+    <section class="postsContainer">
         {% include 'feed/feed.html' with posts=posts %}
-    </div>
+    </section>
 
 {% endblock %}

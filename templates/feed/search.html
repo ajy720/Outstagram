@@ -15,17 +15,25 @@
         }
     </style>
 
-    <link rel="stylesheet" href="{% static 'timeline.css' %}">
+    <link rel="stylesheet" href="{% static 'style/timeline.css' %}">
     <div class="container">
 
         <section class="usersContainer">
             <h4>사용자</h4>
-            {% include "common/userList.html" with users=users %}
+            {% if users.count != 0 %}
+                {% include "common/userList.html" with users=users %}
+            {% else %}
+                {% include "common/noResult.html" %}
+            {% endif %}
         </section>
 
         <section class="postsContainer">
             <h4>게시글</h4>
-            {% include 'feed/feed.html' with posts=posts %}
+            {% if posts.count != 0 %}
+                {% include 'feed/feed.html' with posts=posts %}
+            {% else %}
+                {% include "common/noResult.html" %}
+            {% endif %}
         </section>
 
     </div>
