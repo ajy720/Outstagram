@@ -110,7 +110,7 @@
 
         <div class="row row-cols-lg-3 w-100">
             {% for post in profile.post_set.all %}
-                <div class="col min-">
+                <div class="col mb-4">
                     <a href="{% url 'post:detail' post.id %}">
                         <img src="{{ post.image.url }}" alt="{{ forloop.counter }}" width="100%">
                     </a>
