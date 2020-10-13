@@ -11,8 +11,9 @@ from post.models import Post
 def main(request):
     user = get_object_or_404(User, id=request.user.id)
 
-    followings = user.following.all()
-    posts = Post.objects.filter(author__in=[user.user_from for user in followings])
+    followings = user.get_following()
+    
+    posts = Post.objects.filter(author__in=[user for user in followings])
 
     context = {
         "posts": posts
