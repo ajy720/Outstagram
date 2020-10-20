@@ -22,7 +22,7 @@
         <div class="left w-25 d-flex align-items-center">
             <img src="{{ profile.image.url }}" class="rounded-circle overflow-hidden" alt="프로필 사진" width="100%">
         </div>
-        <div class="right flex-grow-1 pl-lg-5 py-3 d-flex flex-column justify-content-around">
+        <div class="right flex-grow-1 pl-5 py-3 d-flex flex-column justify-content-around">
             <h3>{{ profile.username }}</h3>
             <h5 class="d-flex justify-content-start flex-wrap">
                 <span class="mr-3">게시글 {{ profile.post_set.count }}</span>
@@ -108,7 +108,7 @@
 
     <div class="postContainer d-flex py-4 justify-content-around">
 
-        <div class="row row-cols-lg-3 w-100">
+        <div class="row row-cols-3 w-100">
             {% for post in profile.post_set.all %}
                 <div class="col mb-4">
                     <a href="{% url 'post:detail' post.id %}">
