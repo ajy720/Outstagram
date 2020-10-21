@@ -1,6 +1,4 @@
-import pdb
-
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 
 from post.models import Post
@@ -8,7 +6,7 @@ from .forms import CommentForm
 from .models import Comment
 
 
-# Create your views here.
+# 댓글 좋아요 뷰
 def like_comment(request, comment_id):
     comment = Comment.objects.get(id=comment_id)
     comment_like = comment.like.all()
@@ -30,6 +28,7 @@ def like_comment(request, comment_id):
     return JsonResponse(context)
 
 
+# 댓글 작성 뷰
 def add(request, post_id):
     post = get_object_or_404(Post, id=post_id)
 
@@ -45,8 +44,8 @@ def add(request, post_id):
     return redirect('post:detail', post_id)
 
 
+# 댓글 삭제 뷰
 def delete(request, comment_id):
-
     comment = get_object_or_404(Comment, id=comment_id);
 
     if request.user == comment.author:

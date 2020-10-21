@@ -1,3 +1,5 @@
+{# 컨텍스트 메뉴 템플릿 #}
+
 {% load static %}
 
 <link rel="stylesheet" href="{% static "style/context.css" %}">
@@ -6,25 +8,25 @@
 <img class="contextBtn mr-1" src="{% static "context_menu.png" %}" alt="메뉴"
      style="max-width: 17px; opacity: 0.5;">
 <div class="context">
-    <div class="context_bg"></div>
-    <div class="contextMenu text-center">
-        <div class="font-weight-bold py-2 head">Menu</div>
-        {% if flag == "comment" %}
-            <a href="{% url 'comment:delete' item.id %}">삭제</a>
-        {% elif flag == "post" %}
-            <a href="{% url 'post:delete' item.id %}">삭제</a>
-            <a href="{% url 'post:modify' item.id %}">수정</a>
-        {% endif %}
-    </div>
-    <script>
-        $(".contextBtn").click(function () {
-            $(this).next(".context").show();
-        })
+  <div class="context_bg"></div>
+  <div class="contextMenu text-center">
+    <div class="font-weight-bold py-2 head">Menu</div>
+    {% if flag == "comment" %}
+      <a href="{% url 'comment:delete' item.id %}">삭제</a>
+    {% elif flag == "post" %}
+      <a href="{% url 'post:delete' item.id %}">삭제</a>
+      <a href="{% url 'post:modify' item.id %}">수정</a>
+    {% endif %}
+  </div>
+  <script>
+    $(".contextBtn").click(function () {
+      $(this).next(".context").show();
+    })
 
-        $(".context_bg").click(function () {
-            $(this).parent().hide();
-        })
+    $(".context_bg").click(function () {
+      $(this).parent().hide();
+    })
 
 
-    </script>
+  </script>
 </div>

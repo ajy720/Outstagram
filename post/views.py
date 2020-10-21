@@ -3,10 +3,10 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import PostForm
-# Create your views here.
 from .models import Post
 
 
+# 게시글 작성 뷰
 @login_required(login_url="user:login")
 def create_form(request):
     if request.method == 'POST':
@@ -30,6 +30,7 @@ def create_form(request):
     return render(request, "post/postForm.html", context);
 
 
+# 게시글 삭제 뷰
 def delete(request, post_id):
     post = get_object_or_404(Post, id=post_id)
 
@@ -39,6 +40,7 @@ def delete(request, post_id):
     return redirect("feed:main");
 
 
+# 게시글 수정 뷰
 @login_required(login_url="user:login")
 def modify(request, post_id):
     post = get_object_or_404(Post, id=post_id)
@@ -67,6 +69,7 @@ def modify(request, post_id):
     return render(request, "post/postForm.html", context);
 
 
+# 게시글 상세 뷰
 @login_required(login_url="user:login")
 def detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
@@ -80,6 +83,7 @@ def detail(request, post_id):
     return render(request, 'post/detail.html', context)
 
 
+# 게시글 좋아요 뷰
 def like_post(request, post_id):
     post = Post.objects.get(id=post_id)
     post_like = post.like.all()

@@ -4,10 +4,10 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
 from user.forms import UserForm, UserEditForm, PasswordEditForm
-# Create your views here.
 from user.models import User, UserFollowing
 
 
+# 회원가입 뷰
 def signup(request):
     if request.method == "POST":
         form = UserForm(request.POST)
@@ -28,6 +28,7 @@ def signup(request):
     return render(request, 'user/signup.html', {'form': form})
 
 
+# 사용자 프로필 뷰
 @login_required(login_url="user:login")
 def profile(request, id=None):
     if id:
@@ -46,13 +47,12 @@ def profile(request, id=None):
     return render(request, 'user/profile.html', context)
 
 
+# 사용자 팔로우 뷰
 def follow(request, user_id):
     user_from = get_object_or_404(User, id=request.user.id)
     user_to = get_object_or_404(User, id=user_id)
 
     followers = [user.user_from for user in user_to.followers.all()]
-
-    # pdb.set_trace()
 
     if user_from in followers:
         UserFollowing.objects.get(user_from=user_from, user_to=user_to).delete()
@@ -69,6 +69,7 @@ def follow(request, user_id):
     return JsonResponse(data)
 
 
+# 회원 정보 수정 뷰
 def edit(request):
     user = get_object_or_404(User, id=request.user.id)
 
@@ -92,6 +93,7 @@ def edit(request):
     return render(request, 'user/edit.html', context)
 
 
+# 비밀번호 변경 뷰
 def password(request):
     user = get_object_or_404(User, id=request.user.id)
 

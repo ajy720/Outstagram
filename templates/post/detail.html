@@ -1,142 +1,151 @@
+{# 게시글 상세 템플릿 #}
+
 {% extends 'base.html' %}
 {% load static %}
 
 {% block content %}
-    <style>
-        .commentInput {
-            border: none;
-            border-bottom: 1px solid lightgray;
-            flex-grow: 1;
-        }
+  <style>
+    .commentInput {
+      border: none;
+      border-bottom: 1px solid lightgray;
+      flex-grow: 1;
+    }
 
-        #commentSubmit {
-            border: none;
-            background-color: transparent;
-            text-align: center;
-        }
+    #commentSubmit {
+      border: none;
+      background-color: transparent;
+      text-align: center;
+    }
 
-        .commentSection {
-            flex-grow: 1;
-            overflow-y: scroll;
-        }
-    </style>
+    .commentSection {
+      flex-grow: 1;
+      overflow-y: scroll;
+    }
+  </style>
 
-    <div class="d-flex flex-wrap border" style="height: 700px">
-        <div class="imgContainer" style="height: 100%">
-            <img src="{{ post.image.url }}" alt="{{ post.id }}" height="100%">
+  <div class="d-flex flex-wrap border" style="height: 700px">
+    <div class="imgContainer" style="height: 100%">
+      <img src="{{ post.image.url }}" alt="{{ post.id }}" height="100%">
+    </div>
+    <div
+        class="rightContainer border-left bg-white flex-fill h-100 d-flex flex-column"
+        style="min-width: 200px; max-width: 700px">
+      <div class="postSection border-bottom p-3">
+        <div class="head d-flex align-items-center">
+          <div class="imgContainer" style="width: 50px">
+            <img src="{{ post.author.image.url }}" alt="프로필 사진" width="100%"
+                 class="rounded-circle">
+          </div>
+          <div class="right ml-3 flex-fill">
+            <a href="{% url 'user:profile' post.author.username %}"
+               class="font-weight-bold text-dark">
+              {{ post.author.username }}
+            </a>
+            <div class="text-black-50 small">
+              {{ post.create_at }}
+            </div>
+          </div>
+
+          {% if post.author == user %}
+            {% include "common/contextMenu.html" with flag="post" item=post %}
+          {% endif %}
         </div>
-        <div class="rightContainer border-left bg-white flex-fill h-100 d-flex flex-column"
-             style="min-width: 200px; max-width: 700px">
-            <div class="postSection border-bottom p-3">
-                <div class="head d-flex align-items-center">
-                    <div class="imgContainer" style="width: 50px">
-                        <img src="{{ post.author.image.url }}" alt="프로필 사진" width="100%" class="rounded-circle">
-                    </div>
-                    <div class="right ml-3 flex-fill">
-                        <a href="{% url 'user:profile' post.author.username %}" class="font-weight-bold text-dark">
-                            {{ post.author.username }}
-                        </a>
-                        <div class="text-black-50 small">
-                            {{ post.create_at }}
-                        </div>
-                    </div>
+        {% if post.content %}
+          <div class="body pt-3">
+            {{ post.content }}
+          </div>
+        {% endif %}
 
-                    {% if post.author == user %}
-                        {% include "common/contextMenu.html" with flag="post" item=post %}
-                    {% endif %}
-                </div>
-                {% if post.content %}
-                    <div class="body pt-3">
-                        {{ post.content }}
-                    </div>
-                {% endif %}
+      </div>
+      <div class="commentSection flex-grow-1 border-bottom">
+        {% include 'comment/comments.html' with comments=comments %}
+      </div>
+      <div class="postInfoSection d-flex px-3 pt-3 pb-2 mt-sm-1">
+        <div id="postLike"
+             class="likeContainer mr-3" style="width: 20px;">
+          <img
+              {% if user in post.like.all %}
+                src="{% static 'fill_heart.png' %}"
+              {% else %}
+                src="{% static 'empty_heart.png' %}"
+              {% endif %}
+                alt="heart" width="100%">
+          <script>
 
-            </div>
-            <div class="commentSection flex-grow-1 border-bottom">
-                {% include 'comment/comments.html' with comments=comments %}
-            </div>
-            <div class="postInfoSection d-flex px-3 pt-3 pb-2 mt-sm-1">
-                <div id="postLike"
-                     class="likeContainer mr-3" style="width: 20px;">
-                    <img
-                            {% if user in post.like.all %}
-                                src="{% static 'fill_heart.png' %}"
-                            {% else %}
-                                src="{% static 'empty_heart.png' %}"
-                            {% endif %}
-                                alt="heart" width="100%">
-                    <script>
+            $("#postLike").click(function () {
+              $.ajax({
+                url: "{% url 'post:like_post' post.id %}",
+                success: ({flag, count}) => {
+                  console.log(flag, count)
+                  $("#postLikeCount").text("좋아요 " + count + "개")
+                  if (flag) {
+                    $(this).find("img").attr(
+                      "src",
+                      "{% static 'fill_heart.png' %}"
+                    )
+                  } else {
+                    $(this).find("img").attr(
+                      "src",
+                      "{% static 'empty_heart.png' %}"
+                    )
+                  }
+                }
+              })
 
-                        $("#postLike").click(function () {
-                            $.ajax({
-                                url: "{% url 'post:like_post' post.id %}",
-                                success: ({flag, count}) => {
-                                    console.log(flag, count)
-                                    $("#postLikeCount").text("좋아요 " + count + "개")
-                                    if (flag) {
-                                        $(this).find("img").attr(
-                                            "src",
-                                            "{% static 'fill_heart.png' %}"
-                                        )
-                                    } else {
-                                        $(this).find("img").attr(
-                                            "src",
-                                            "{% static 'empty_heart.png' %}"
-                                        )
-                                    }
-                                }
-                            })
-
-                        })
-                    </script>
-                </div>
-                <div class="text-dark font-weight-bolder mr-3">
+            })
+          </script>
+        </div>
+        <div class="text-dark font-weight-bolder mr-3">
                     <span id="postLikeCount" class="postLikeCount">
                     좋아요 {{ post.like.count }}개
                     </span>
-                    <div id="likeList" class="userList">
-                        <div class="bg"></div>
-                        <div class="scrollCover">
-                            <div class="usersContainer">
-                                {% include "common/userList.html" with users=post.like.all %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="text-dark font-weight-bolder mr-3">
+          <div id="likeList" class="userList">
+            <div class="bg"></div>
+            <div class="scrollCover">
+              <div class="usersContainer">
+                {% include "common/userList.html" with users=post.like.all %}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="text-dark font-weight-bolder mr-3">
                     <span>
                     댓글
-                        <span id="postCommentCount">{{ post.comment_set.count }}</span>개
+                        <span
+                            id="postCommentCount">{{ post.comment_set.count }}</span>개
                     </span>
-                </div>
-            </div>
-            <form class="addCommentSection d-flex px-3 pt-2 pb-3 justify-content-between"
-                  action="{% url 'comment:add' post.id %}" method="post">
-                {% csrf_token %}
-                <textarea name="content" class="commentInput" type="text" placeholder="댓글을 입력하세요."
-                          rows="1" autofocus></textarea>
-                <input id="commentSubmit" class="text-black-50" type="submit" value="게시" disabled>
-                <script>
-
-                    $("#postLikeCount").click(function () {
-                        $("#likeList").show()
-                    });
-
-                    $(".bg").click(function () {
-                        $(this).parent(".userList").hide()
-                    })
-
-                    $(".commentInput").on("propertychange change keyup paste input", function () {
-                        btn = $(this).next()
-                        if ($(this).val().length === 0) {
-                            $(btn).attr({"disabled": true, "class": "text-black-50"})
-                        } else {
-                            $(btn).attr({"disabled": false, "class": "text-primary"})
-                        }
-                    })
-                </script>
-            </form>
         </div>
+      </div>
+      <form
+          class="addCommentSection d-flex px-3 pt-2 pb-3 justify-content-between"
+          action="{% url 'comment:add' post.id %}" method="post">
+        {% csrf_token %}
+        <textarea name="content" class="commentInput" type="text"
+                  placeholder="댓글을 입력하세요."
+                  rows="1" autofocus></textarea>
+        <input id="commentSubmit" class="text-black-50" type="submit" value="게시"
+               disabled>
+        <script>
+
+          $("#postLikeCount").click(function () {
+            $("#likeList").show()
+          });
+
+          $(".bg").click(function () {
+            $(this).parent(".userList").hide()
+          })
+
+          $(".commentInput").on("propertychange change keyup paste input", function () {
+            btn = $(this).next()
+            if ($(this).val().length === 0) {
+              $(btn).attr({"disabled": true, "class": "text-black-50"})
+            } else {
+              $(btn).attr({"disabled": false, "class": "text-primary"})
+            }
+          })
+        </script>
+      </form>
     </div>
+  </div>
 
 {% endblock %}

@@ -1,126 +1,134 @@
+{# 사용자 프로필 템플릿 #}
+
 {% extends 'base.html' %}
 {% load static %}
 
 {% block content %}
 
-    <style>
-        h5 * {
-            user-select: none;
-        }
+  <style>
+    h5 * {
+      user-select: none;
+    }
 
-        h5 a {
-            color: black;
-            cursor: pointer;
-        }
+    h5 a {
+      color: black;
+      cursor: pointer;
+    }
 
-        a:hover {
-            color: black;
-        }
+    a:hover {
+      color: black;
+    }
 
-    </style>
-    <div class="infoContainer d-flex py-4 justify-content-around w-75 m-auto justify-content-around">
-        <div class="left w-25 d-flex align-items-center">
-            <img src="{{ profile.image.url }}" class="rounded-circle overflow-hidden" alt="프로필 사진" width="100%">
-        </div>
-        <div class="right flex-grow-1 pl-5 py-3 d-flex flex-column justify-content-around">
-            <h3>{{ profile.username }}</h3>
-            <h5 class="d-flex justify-content-start flex-wrap">
-                <span class="mr-3">게시글 {{ profile.post_set.count }}</span>
-                <a class="mr-3" id="followers">팔로워 {{ profile.followers.count }}</a>
-                <a class="mr-3" id="following">팔로잉 {{ profile.following.count }}</a>
+  </style>
+  <div
+      class="infoContainer d-flex py-4 justify-content-around w-75 m-auto justify-content-around">
+    <div class="left w-25 d-flex align-items-center">
+      <img src="{{ profile.image.url }}" class="rounded-circle overflow-hidden"
+           alt="프로필 사진" width="100%">
+    </div>
+    <div
+        class="right flex-grow-1 pl-5 py-3 d-flex flex-column justify-content-around">
+      <h3>{{ profile.username }}</h3>
+      <h5 class="d-flex justify-content-start flex-wrap">
+        <span class="mr-3">게시글 {{ profile.post_set.count }}</span>
+        <a class="mr-3" id="followers">팔로워 {{ profile.followers.count }}</a>
+        <a class="mr-3" id="following">팔로잉 {{ profile.following.count }}</a>
 
-                <div id="followersList" class="userList">
-                    <div class="bg"></div>
-                    <div class="scrollCover">
-                        <div class="usersContainer">
-                            {% include "common/userList.html" with users=profile.get_followers %}
-                        </div>
-                    </div>
-                </div>
-
-                <div id="followingList" class="userList">
-                    <div class="bg"></div>
-                    <div class="scrollCover">
-                        <div class="usersContainer">
-                            {% include "common/userList.html" with users=profile.get_following %}
-                        </div>
-                    </div>
-                </div>
-
-                <script>
-                    $("#followers").click(function () {
-                        $("#followersList").show()
-                    });
-                    $("#following").click(function () {
-                        $("#followingList").show()
-                    });
-
-                    $(".bg").click(function () {
-                        $(this).parent(".userList").hide()
-                    })
-                </script>
-
-
-            </h5>
-
-
-            <div class="d-flex justify-content-start flex-wrap">
-                {% if user != profile %}
-                    {% if user in profile.get_followers %}
-                        <div id="follow" class="btn w-25 btn-secondary"> 팔로잉</div>
-                    {% else %}
-                        <div id="follow" class="btn w-25 btn-primary"> 팔로우</div>
-                    {% endif %}
-
-                    <script>
-                        $("#follow").click(function () {
-
-                            $.ajax({
-                                url: "{% url 'user:follow' profile.id %}",
-                                success: ({flag, count}) => {
-                                    if (flag) {
-                                        $("#follow").text("팔로잉")
-                                        $("#follow").removeClass("btn-primary")
-                                        $("#follow").addClass("btn-secondary")
-                                    } else {
-                                        $("#follow").text("팔로우")
-                                        $("#follow").removeClass("btn-secondary")
-                                        $("#follow").addClass("btn-primary")
-                                    }
-                                    $("#followers").text("팔로워 " + count)
-                                },
-                            })
-                        })
-                    </script>
-
-                {% else %}
-                    <a class="mr-3 d-block btn btn-outline-dark" href="{% url 'user:edit' %}">
-                        프로필 수정
-                    </a>
-                    <a class="d-block btn btn-outline-info" href="{% url 'post:create' %}">
-                        게시글 작성
-                    </a>
-                {% endif %}
+        <div id="followersList" class="userList">
+          <div class="bg"></div>
+          <div class="scrollCover">
+            <div class="usersContainer">
+              {% include "common/userList.html" with users=profile.get_followers %}
             </div>
-        </div>
-    </div>
-    <hr>
-
-    <div class="postContainer d-flex py-4 justify-content-around">
-
-        <div class="row row-cols-3 w-100">
-            {% for post in profile.post_set.all %}
-                <div class="col mb-4">
-                    <a href="{% url 'post:detail' post.id %}">
-                        <img src="{{ post.image.url }}" alt="{{ forloop.counter }}" width="100%">
-                    </a>
-                </div>
-
-
-            {% endfor %}
-
+          </div>
         </div>
 
+        <div id="followingList" class="userList">
+          <div class="bg"></div>
+          <div class="scrollCover">
+            <div class="usersContainer">
+              {% include "common/userList.html" with users=profile.get_following %}
+            </div>
+          </div>
+        </div>
+
+        <script>
+          $("#followers").click(function () {
+            $("#followersList").show()
+          });
+          $("#following").click(function () {
+            $("#followingList").show()
+          });
+
+          $(".bg").click(function () {
+            $(this).parent(".userList").hide()
+          })
+        </script>
+
+
+      </h5>
+
+
+      <div class="d-flex justify-content-start flex-wrap">
+        {% if user != profile %}
+          {% if user in profile.get_followers %}
+            <div id="follow" class="btn w-25 btn-secondary"> 팔로잉</div>
+          {% else %}
+            <div id="follow" class="btn w-25 btn-primary"> 팔로우</div>
+          {% endif %}
+
+          <script>
+            $("#follow").click(function () {
+
+              $.ajax({
+                url: "{% url 'user:follow' profile.id %}",
+                success: ({flag, count}) => {
+                  if (flag) {
+                    $("#follow").text("팔로잉")
+                    $("#follow").removeClass("btn-primary")
+                    $("#follow").addClass("btn-secondary")
+                  } else {
+                    $("#follow").text("팔로우")
+                    $("#follow").removeClass("btn-secondary")
+                    $("#follow").addClass("btn-primary")
+                  }
+                  $("#followers").text("팔로워 " + count)
+                },
+              })
+            })
+          </script>
+
+        {% else %}
+          <a class="mr-3 d-block btn btn-outline-dark"
+             href="{% url 'user:edit' %}">
+            프로필 수정
+          </a>
+          <a class="d-block btn btn-outline-info"
+             href="{% url 'post:create' %}">
+            게시글 작성
+          </a>
+        {% endif %}
+      </div>
     </div>
+  </div>
+  <hr>
+
+  <div class="postContainer d-flex py-4 justify-content-around">
+
+    <div class="row row-cols-3 w-100">
+      {% for post in profile.post_set.all %}
+        <div class="col mb-4">
+          <a href="{% url 'post:detail' post.id %}">
+            <img src="{{ post.image.url }}" alt="{{ forloop.counter }}"
+                 width="100%">
+          </a>
+        </div>
+
+
+      {% endfor %}
+
+    </div>
+
+  </div>
 
 {% endblock %}

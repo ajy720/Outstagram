@@ -1,81 +1,83 @@
+{# 댓글 목록 템플릿 #}
+
 {% load static %}
 
 <style>
-    .comment {
-        display: flex;
-        align-items: center;
-    }
+  .comment {
+    display: flex;
+    align-items: center;
+  }
 
 </style>
 
 {% for comment in comments %}
-    <div id="comment{{ comment.id }}"
-         class="comment head p-3">
-        <a class="imgContainer" style="display: block; max-width: 50px"
-           href="{% url 'user:profile' comment.author.username %}">
-            <img src="{{ comment.author.image.url }}" alt="프로필 사진" width="100%"
-                 class="rounded-circle">
-        </a>
-        <div class="contentContainer ml-3 flex-fill">
-            <div class="text-break text-wrap">
-                <a href="{% url 'user:profile' comment.author.username %}"
-                   class="font-weight-bold text-dark d-inline">
-                    {{ comment.author.username }}</a>
-                {{ comment.content }}
+  <div id="comment{{ comment.id }}"
+       class="comment head p-3">
+    <a class="imgContainer" style="display: block; max-width: 50px"
+       href="{% url 'user:profile' comment.author.username %}">
+      <img src="{{ comment.author.image.url }}" alt="프로필 사진" width="100%"
+           class="rounded-circle">
+    </a>
+    <div class="contentContainer ml-3 flex-fill">
+      <div class="text-break text-wrap">
+        <a href="{% url 'user:profile' comment.author.username %}"
+           class="font-weight-bold text-dark d-inline">
+          {{ comment.author.username }}</a>
+        {{ comment.content }}
 
-            </div>
-            <div class="text-black-50 small">
+      </div>
+      <div class="text-black-50 small">
                 <span>
                 {{ comment.create_at }}
                 </span>
-                <span>
+        <span>
                     좋아요
                     <span id="comment{{ comment.id }}LikeCount">
                         {{ comment.like.count }}</span>개
                 </span>
-            </div>
-        </div>
-
-        {% if comment.author == user %}
-            {% include "common/contextMenu.html" with flag="comment" item=comment %}
-        {% endif %}
-        <div id="comment{{ comment.id }}heart"
-             class="likeContainer" style="max-width: 20px">
-            <img class="heart"
-                    {% if user in comment.like.all %}
-                 src="{% static 'fill_heart.png' %}"
-                    {% else %}
-                 src="{% static 'empty_heart.png' %}"
-                    {% endif %}
-                 alt="heart" width="100%">
-            <script>
-                $("#comment{{ comment.id }}heart").click(like);
-                $("#comment{{ comment.id }}").dblclick(like);
-
-                function like() {
-                    $.ajax({
-                        url: "{% url 'comment:like_comment' comment.id %}",
-                        success: ({flag, count}) => {
-                            console.log(flag, count)
-                            $("#comment{{ comment.id }}LikeCount").text(count)
-
-                            if (flag) {
-                                $(this).find("img.heart").attr(
-                                    "src",
-                                    "{% static 'fill_heart.png' %}"
-                                )
-                            } else {
-                                $(this).find("img.heart").attr(
-                                    "src",
-                                    "{% static 'empty_heart.png' %}"
-                                )
-                            }
-                        }
-                    })
-
-                }
-            </script>
-        </div>
+      </div>
     </div>
+
+    {% if comment.author == user %}
+      {% include "common/contextMenu.html" with flag="comment" item=comment %}
+    {% endif %}
+    <div id="comment{{ comment.id }}heart"
+         class="likeContainer" style="max-width: 20px">
+      <img class="heart"
+          {% if user in comment.like.all %}
+           src="{% static 'fill_heart.png' %}"
+          {% else %}
+           src="{% static 'empty_heart.png' %}"
+          {% endif %}
+           alt="heart" width="100%">
+      <script>
+        $("#comment{{ comment.id }}heart").click(like);
+        $("#comment{{ comment.id }}").dblclick(like);
+
+        function like() {
+          $.ajax({
+            url: "{% url 'comment:like_comment' comment.id %}",
+            success: ({flag, count}) => {
+              console.log(flag, count)
+              $("#comment{{ comment.id }}LikeCount").text(count)
+
+              if (flag) {
+                $(this).find("img.heart").attr(
+                  "src",
+                  "{% static 'fill_heart.png' %}"
+                )
+              } else {
+                $(this).find("img.heart").attr(
+                  "src",
+                  "{% static 'empty_heart.png' %}"
+                )
+              }
+            }
+          })
+
+        }
+      </script>
+    </div>
+  </div>
 
 {% endfor %}

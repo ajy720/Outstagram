@@ -1,16 +1,21 @@
-<nav class="navbar navbar-light bg-white border-bottom text mb-4" style="display:flex;">
-    <div class="container">
+{# 네비게이션 바 템플릿 #}
+
+<nav class="navbar navbar-light bg-white border-bottom text mb-4"
+     style="display:flex;">
+  <div class="container">
     <a class="navbar-brand" href="{% url 'feed:main' %}">Outstagram</a>
     {% if user.is_authenticated %}
-        <form class="form-inline w-50 justify-content-around" action="{% url "feed:search" %}" method="post">
+      <form class="form-inline w-50 justify-content-around"
+            action="{% url "feed:search" %}" method="post">
         {% csrf_token %}
-            <input class="form-control w-100" type="search" placeholder="Search" aria-label="Search" name="search">
-        </form>
-        <div style="display:flex; " class="justify-content-end ml-3">
-            <a href="{% url 'user:logout' %}">로그아웃</a>
-            <a class="ml-2" href="{% url 'user:profile' %}">{{ user.username }}</a>
-        </div>
+        <input class="form-control w-100" type="search" placeholder="Search"
+               aria-label="Search" name="search">
+      </form>
+      <div style="display:flex; " class="justify-content-end ml-3">
+        <a href="{% url 'user:logout' %}">로그아웃</a>
+        <a class="ml-2" href="{% url 'user:profile' %}">{{ user.username }}</a>
+      </div>
     {% endif %}
-    </div>
+  </div>
 
 </nav>
